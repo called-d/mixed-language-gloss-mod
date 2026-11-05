@@ -2,6 +2,8 @@
 
 Claude Code の mod。Claude の日本語の応答に紛れた別の言語（中国語の字・キリル文字・段落ごとの英語）を見つけ、[PLaMo 3 Translate](https://huggingface.co/pfnet) で日本語にした訳を、原文の後ろに差し込んで表示します。
 
+<img width="1076" height="187" alt="訳が差し込まれている様子の画像。パレットは個人の責任でカスタマイズしてください" src="https://github.com/user-attachments/assets/87a50ae6-b77b-4dfc-948e-e2cd10c16290" />
+
 ```
 変更を确认確認してから push します。        ← 「确认」の後ろに「確認」を背景色付きで差し込む
 この設定は всегда常に 有効です。

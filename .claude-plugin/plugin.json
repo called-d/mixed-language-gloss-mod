@@ -1,0 +1,55 @@
+{
+  "name": "mixed-language-gloss",
+  "version": "0.1.0",
+  "description": "Claude の日本語の応答に紛れた中国語の字・キリル文字・英語の段落を見つけ、PLaMo 3 Translate（llama-server）の訳を原文の後ろに差し込んで表示する。記録とモデルの文脈は変えない",
+  "author": { "name": "called_D" },
+  "license": "MIT OR CC0-1.0",
+  "repository": "https://github.com/called-d/mixed-language-gloss-mod",
+  "keywords": ["japanese", "translation", "plamo", "llama.cpp"],
+  "types": "./types/index.d.ts",
+  "userConfig": {
+    "endpoint": {
+      "type": "string",
+      "title": "PLaMo のエンドポイント",
+      "description": "PLaMo 3 Translate を動かしている llama-server の URL（/v1 は付けない）",
+      "default": "http://127.0.0.1:8090"
+    },
+    "startCommand": {
+      "type": "string",
+      "title": "PLaMo を起動するコマンド",
+      "description": "エンドポイントが応答しないときに実行するコマンド。空白区切りで、\"…\" で囲むと 1 つの引数。サーバーを裏で起動し、応答するまで待って 0 で終わるもの（scripts/start-plamo.ps1 / start-plamo.sh）。空なら起動しない",
+      "default": ""
+    },
+    "style": {
+      "type": "string",
+      "title": "訳の塗り方",
+      "description": "per-kind: 種類ごとに 1 色の背景、per-char: 1 字ずつ palette の色を順に巡る背景、gradient: 訳の頭から終わりまで palette の色をなめらかにつなぐ背景、text: 背景なしで文字色と〔〕",
+      "options": ["per-kind", "per-char", "gradient", "text"],
+      "default": "per-kind"
+    },
+    "palette": {
+      "type": "string",
+      "title": "色の並び",
+      "description": "カンマ区切りの色（#rrggbb など）。per-kind と text では 1・2・3 番目が中国語の字・キリル文字・英語の色。per-char と gradient ではその番目から順に巡る（色の名前は gradient で混ぜられないので #rrggbb で書く）",
+      "default": "#8a5a12,#2e6e62,#4f5d6b"
+    },
+    "textColor": {
+      "type": "string",
+      "title": "背景を塗るときの文字色",
+      "description": "per-kind と per-char で、差し込んだ訳の文字の色",
+      "default": "#ffffff"
+    },
+    "accentColor": {
+      "type": "string",
+      "title": "差し込んだブロックの ● とインラインコードの色",
+      "description": "空なら端末の既定の色（インラインコードは ` を残す）",
+      "default": ""
+    },
+    "label": {
+      "type": "string",
+      "title": "応答の下に添える行の見出し",
+      "description": "空なら添えない",
+      "default": "PLaMo 3 Translate"
+    }
+  }
+}

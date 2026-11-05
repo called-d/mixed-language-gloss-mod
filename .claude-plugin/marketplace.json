@@ -1,0 +1,6 @@
+{
+  "name": "mixed-language-gloss",
+  "owner": { "name": "called_D" },
+  "description": "Claude の日本語の応答に紛れた中国語の字・キリル文字・英語の段落へ、PLaMo 3 Translate の訳を差し込む mod",
+  "plugins": [{ "name": "mixed-language-gloss", "source": "./" }]
+}

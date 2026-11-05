@@ -1,0 +1,4 @@
+# Claude Code が mod を読み込むときに書く型定義
+.claude-plugin/types/
+node_modules/
+*.log

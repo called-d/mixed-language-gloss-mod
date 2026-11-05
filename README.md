@@ -56,12 +56,12 @@ llama-server -m plamo-3-translate-2b-Q4_K_M.gguf -c 16384 --host 127.0.0.1 --por
 
 ## 設定
 
-`/config` の一覧か、`~/.claude/settings.json` の `pluginConfigs` で設定します。
+`/config` の一覧か、`~/.claude/settings.json` の `pluginConfigs` で設定します。鍵はマーケットプレイスから入れたなら `mixed-language-gloss@mixed-language-gloss`、`--plugin-dir` で読み込んだなら `mixed-language-gloss` です。
 
 ```json
 {
   "pluginConfigs": {
-    "mixed-language-gloss": {
+    "mixed-language-gloss@mixed-language-gloss": {
       "options": {
         "startCommand": "/path/to/scripts/start-plamo.sh /usr/local/bin/llama-server /path/to/plamo-3-translate",
         "style": "per-char",

@@ -26,7 +26,20 @@ The server is still running in the background.
 
 ## 入れ方
 
-Claude Code のプロンプトで:
+llama-server とモデルの用意、起動コマンドや色の設定まで要るので、Claude Code にこのリポジトリの URL を渡して頼むのがおすすめです。
+
+```
+https://github.com/called-d/mixed-language-gloss-mod を README に沿って入れて、PLaMo 3 Translate が動くように設定して
+```
+
+頼まれたエージェントがすること:
+
+1. 下の `/plugin install` か `claude plugin install` でプラグインを入れる
+2. `llama-server` と PLaMo 3 Translate の GGUF・`chat_template.jinja` の場所を確かめる（無ければ入れ方をユーザーに尋ねる）
+3. `~/.claude/settings.json` の `pluginConfigs` に、[設定](#設定) の鍵で `startCommand` などを書く。`startCommand` には `scripts/` の起動スクリプトを、OS に合わせて絶対パスで書く
+4. 日本語の文に `确认` や `всегда` を混ぜた応答で、訳が差し込まれるのを確かめてもらう（設定を書き換えたあとは Claude Code の再起動が必要なことがある）
+
+自分で入れるなら、Claude Code のプロンプトで:
 
 ```
 /plugin install mixed-language-gloss --marketplace called-d/mixed-language-gloss-mod

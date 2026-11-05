@@ -1,4 +1,4 @@
-// 差し込んだ訳の描き方（userConfig の style / palette / textColor / accentColor / label）を読む。$ を使わない純粋な関数だけ
+// 差し込んだ訳の描き方（userConfig の style / palette / textColor / accentColor / label / labelColor）を読む。$ を使わない純粋な関数だけ
 import type { Kind } from '../types'
 
 /**
@@ -18,6 +18,8 @@ export type Style = {
   accent: string
   /** 応答の下に添える行の見出し。空なら添えない */
   label: string
+  /** 見出しの i 字目（空白を数えない）の文字色。空なら薄い色で描く */
+  labelColorOf: (i: number) => string
   /**
    * n 字の訳の i 字目の色（strategy に従う）。palette の何番目から始めるかで種類を分ける（中国語の字 0、キリル文字 1、英語 2）
    * - per-kind・text: 種類の色
@@ -33,6 +35,7 @@ export const DEFAULTS = {
   textColor: '#ffffff',
   accentColor: '',
   label: 'PLaMo 3 Translate',
+  labelColor: '',
 } as const
 
 const KIND_OFFSET: Record<Kind, number> = { zh: 0, ru: 1, en: 2 }
@@ -74,12 +77,18 @@ export function readStyle(options: Options): Style {
   const textColor = COLOR.test(str(options, 'textColor')) ? str(options, 'textColor') : DEFAULTS.textColor
   const accent = COLOR.test(str(options, 'accentColor')) ? str(options, 'accentColor') : ''
   const at = (k: number) => palette[((k % palette.length) + palette.length) % palette.length] ?? '#808080'
+  const labelColor = str(options, 'labelColor')
+  const labelColorOf = (i: number) => {
+    if (labelColor === 'palette') return at(i)
+    return COLOR.test(labelColor) ? labelColor : ''
+  }
   return {
     strategy,
     palette,
     textColor,
     accent,
     label: str(options, 'label'),
+    labelColorOf,
     colorOf: (kind, i, n) => {
       const start = KIND_OFFSET[kind]
       switch (strategy) {

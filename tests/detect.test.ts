@@ -91,6 +91,13 @@ test('gradient は kind の色から始めて palette を一巡する', async ()
   expect(readStyle({ style: 'gradient', palette: 'red,#00ff00' }).colorOf('zh', 1, 4)).toBe('red')
 })
 
+test('見出しの文字色', async () => {
+  expect(readStyle({}).labelColorOf(0)).toBe('')
+  expect(readStyle({ labelColor: '#123456' }).labelColorOf(3)).toBe('#123456')
+  const s = readStyle({ labelColor: 'palette', palette: '#000000,#ffffff' })
+  expect([0, 1, 2].map(i => s.labelColorOf(i))).toEqual(['#000000', '#ffffff', '#000000'])
+})
+
 test('per-kind は字の位置によらず種類の色', async () => {
   const s = readStyle({ palette: '#000000,#ffffff' })
   expect([0, 1, 2].map(i => s.colorOf('ru', i, 3))).toEqual(['#ffffff', '#ffffff', '#ffffff'])

@@ -50,6 +50,12 @@
       "title": "応答の下に添える行の見出し",
       "description": "空なら添えない",
       "default": "PLaMo 3 Translate"
+    },
+    "labelColor": {
+      "type": "string",
+      "title": "見出しの文字色",
+      "description": "空なら薄い色、palette なら 1 字ずつ palette の色を順に巡る、色（#rrggbb など）ならその色",
+      "default": ""
     }
   }
 }

@@ -195,14 +195,21 @@ export const register: Register = (on, options) => {
 
     const { Box, Text, Markdown } = $.ui.resolve(e)
     const style = cfg.style
-    const footer = (note: string) =>
-      style.label ? (
+    const footer = (note: string) => {
+      if (!style.label) return null
+      let k = 0
+      const label = Array.from(style.label).map(c => {
+        const color = c.trim() ? style.labelColorOf(k++) : ''
+        return color ? <Text color={color}>{c}</Text> : c
+      })
+      return (
         <Text dimColor>
           {'  '}
-          {style.label}
+          {label}
           {`: ${note}`}
         </Text>
-      ) : null
+      )
+    }
     const waitingNote = isDown ? 'PLaMo に繋がりません' : '確かめています…'
     if (applied.length === 0) {
       const note = waitingCount > 0 ? waitingNote : '直せませんでした'

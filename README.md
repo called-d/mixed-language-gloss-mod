@@ -79,6 +79,7 @@ llama-server -m plamo-3-translate-2b-Q4_K_M.gguf -c 16384 --host 127.0.0.1 --por
 | `textColor` | `#ffffff` | 背景を塗るときの文字色 |
 | `accentColor` | 空 | 差し込んだブロックの先頭の ● とインラインコードの色。空なら端末の既定の色 |
 | `label` | `PLaMo 3 Translate` | 応答の下に添える行の見出し。空なら添えない |
+| `labelColor` | 空 | 見出しの文字色。空なら薄い色、`palette` なら 1 字ずつ `palette` の色を順に巡る（空白は数えない）、色を書けばその色 |
 
 `/mixed-gloss off` で止め、`/mixed-gloss on` でまた差し込みます。
 

@@ -1,6 +1,6 @@
 {
   "name": "mixed-language-gloss",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Claude の日本語の応答に紛れた中国語の字・キリル文字・英語の段落を見つけ、PLaMo 3 Translate（llama-server）の訳を原文の後ろに差し込んで表示する。記録とモデルの文脈は変えない",
   "author": { "name": "called_D" },
   "license": "MIT OR CC0-1.0",

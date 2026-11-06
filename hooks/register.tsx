@@ -236,23 +236,28 @@ export const register: Register = (on, options) => {
       )
     const insert = (s: string, kind: Kind): RenderChildren => {
       const body = s.trim()
-      switch (style.strategy) {
-        case 'text':
-          return <Text color={style.colorOf(kind, 0, 1)}>{`〔${body}〕`}</Text>
-        default: {
-          // 背景を塗る塗り方は、1 字ずつ style.colorOf に色を聞く
-          const chars = Array.from(body)
-          return (
-            <Text>
-              {chars.map((c, i) => (
-                <Text backgroundColor={style.colorOf(kind, i, chars.length)} color={style.textColor}>
-                  {c}
-                </Text>
-              ))}
-            </Text>
-          )
-        }
+      // 背景を塗らない塗り方は区切りが見えないので〔〕で囲む
+      if (style.foreground) {
+        const chars = Array.from(`〔${body}〕`)
+        // 〔〕は訳の頭と終わりの色に揃える
+        return (
+          <Text>
+            {chars.map((c, i) => (
+              <Text color={style.colorOf(kind, Math.max(0, Math.min(i - 1, chars.length - 3)), chars.length - 2)}>{c}</Text>
+            ))}
+          </Text>
+        )
       }
+      const chars = Array.from(body)
+      return (
+        <Text>
+          {chars.map((c, i) => (
+            <Text backgroundColor={style.colorOf(kind, i, chars.length)} color={style.textColor}>
+              {c}
+            </Text>
+          ))}
+        </Text>
+      )
     }
 
     // 直した行は Text で描き、それ以外の行はまとめて Markdown に渡す
@@ -325,11 +330,15 @@ export const register: Register = (on, options) => {
             {rows}
           </Box>
         </Box>
-        {footer(
-          waitingCount > 0
-            ? `${count} か所に訳を差し込みました。残り ${waitingCount} 件は${waitingNote}`
-            : `${count} か所に訳を差し込みました（/${COMMAND} off で止める）`,
-        )}
+        {style.showCount
+          ? footer(
+              waitingCount > 0
+                ? `${count} か所に訳を差し込みました。残り ${waitingCount} 件は${waitingNote}`
+                : `${count} か所に訳を差し込みました（/${COMMAND} off で止める）`,
+            )
+          : waitingCount > 0
+            ? footer(waitingNote)
+            : null}
       </Box>
     )
   })

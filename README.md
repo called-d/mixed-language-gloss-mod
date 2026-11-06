@@ -90,6 +90,8 @@ llama-server -m plamo-3-translate-2b-Q4_K_M.gguf -c 16384 --host 127.0.0.1 --por
 | `endpoint` | `http://127.0.0.1:8090` | llama-server の URL（`/v1` は付けない） |
 | `startCommand` | 空 | エンドポイントが応答しないときに実行するコマンド。空白区切りで、`"…"` で囲むと 1 つの引数。空なら起動しない |
 | `style` | `per-kind` | 訳の塗り方。`per-kind`: 種類ごとに 1 色の背景、`per-char`: 1 字ずつ `palette` を巡る背景、`gradient`: 訳の頭から終わりまで `palette` の色をなめらかにつなぐ背景、`text`: 背景なしで文字色と〔〕 |
+| `colorTarget` | `background` | 色を付ける場所。`background`: 背景を塗る、`foreground`: 文字色を付けて〔〕で囲む（`style` が `text` のときは常に `foreground`） |
+| `showCount` | `true` | 応答の下に「N か所に訳を差し込みました」の行を添えるか。`false` なら、訳を待っている間と PLaMo に繋がらないときの知らせだけを添える |
 | `palette` | `#8a5a12,#2e6e62,#4f5d6b` | カンマ区切りの色。`per-kind` と `text` では 1・2・3 番目が中国語の字・キリル文字・英語の色。`per-char` と `gradient` ではその番目から順に巡る。`gradient` で混ぜるのは `#rrggbb` の色だけ |
 | `textColor` | `#ffffff` | 背景を塗るときの文字色 |
 | `accentColor` | 空 | 差し込んだブロックの先頭の ● とインラインコードの色。空なら端末の既定の色 |

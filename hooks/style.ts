@@ -12,6 +12,10 @@ const STRATEGIES: readonly Strategy[] = ['per-kind', 'per-char', 'gradient', 'te
 
 export type Style = {
   strategy: Strategy
+  /** 色を文字色（前景）に付けるか。false なら背景に付ける（text は常に前景） */
+  foreground: boolean
+  /** 差し込んだ個数を応答の下の行に書くか */
+  showCount: boolean
   palette: readonly string[]
   textColor: string
   /** 先頭の ●・インラインコード・リンクの色。空なら端末の既定の色 */
@@ -31,6 +35,8 @@ export type Style = {
 
 export const DEFAULTS = {
   style: 'per-kind',
+  colorTarget: 'background',
+  showCount: 'true',
   palette: '#8a5a12,#2e6e62,#4f5d6b',
   textColor: '#ffffff',
   accentColor: '',
@@ -82,8 +88,12 @@ export function readStyle(options: Options): Style {
     if (labelColor === 'palette') return at(i)
     return COLOR.test(labelColor) ? labelColor : ''
   }
+  const flag = options.showCount
+  const showCount = typeof flag === 'boolean' ? flag : str(options, 'showCount') !== 'false'
   return {
     strategy,
+    foreground: strategy === 'text' || str(options, 'colorTarget') === 'foreground',
+    showCount,
     palette,
     textColor,
     accent,

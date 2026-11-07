@@ -1,6 +1,6 @@
 {
   "name": "mixed-language-gloss",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Claude の日本語の応答に紛れた中国語の字・キリル文字・英語の段落を見つけ、PLaMo 3 Translate（llama-server）の訳を原文の後ろに差し込んで表示する。記録とモデルの文脈は変えない",
   "author": { "name": "called_D" },
   "license": "MIT OR CC0-1.0",
@@ -18,6 +18,12 @@
       "type": "string",
       "title": "PLaMo を起動するコマンド",
       "description": "エンドポイントが応答しないときに実行するコマンド。空白区切りで、\"…\" で囲むと 1 つの引数。サーバーを裏で起動し、応答するまで待って 0 で終わるもの（scripts/start-plamo.ps1 / start-plamo.sh）。空なら起動しない",
+      "default": ""
+    },
+    "keepTerms": {
+      "type": "string",
+      "title": "訳さずそのまま残す語",
+      "description": "カンマ区切り。英語の段落を訳すとき、これらの語は片仮名にせず原文のまま残す（大文字小文字は区別する）",
       "default": ""
     },
     "style": {

@@ -51,9 +51,10 @@ function enqueue(job: Job) {
   queue.push(job)
 }
 // 設定（userConfig）。register が読み込みのたびに入れる
-const cfg: { endpoint: string; start: string[]; style: Style } = {
+const cfg: { endpoint: string; start: string[]; keepTerms: string[]; style: Style } = {
   endpoint: DEFAULT_ENDPOINT,
   start: [],
+  keepTerms: [],
   style: readStyle({}),
 }
 
@@ -81,21 +82,42 @@ async function ensureServer($: EngineInterface): Promise<boolean> {
   return false
 }
 
+/** 英語の段落は、固有名詞を片仮名にされることがある。keepTerms の語は番号に置き換えて渡し、訳の後で戻す */
+function maskTerms(text: string, terms: string[]): { masked: string; restore: (out: string) => string | null } {
+  const used: string[] = []
+  let masked = text
+  for (const term of terms) {
+    if (!masked.includes(term)) continue
+    masked = masked.split(term).join(`[[${used.length + 1}]]`)
+    used.push(term)
+  }
+  return {
+    masked,
+    restore(out) {
+      // 番号が訳から消えていたら、語が失われているので使わない
+      if (used.some((_, i) => !out.includes(`[[${i + 1}]]`))) return null
+      return out.replace(/\[\[(\d+)\]\]/g, (m, n) => used[Number(n) - 1] ?? m)
+    },
+  }
+}
+
 async function translate($: EngineInterface, u: Unit): Promise<string | null> {
   const src = u.kind === 'en' ? 'en' : 'ja'
+  const { masked, restore } = src === 'en' ? maskTerms(u.from, cfg.keepTerms) : { masked: u.from, restore: (s: string) => s }
   try {
     const r = await $.http.fetch(`${cfg.endpoint}/v1/completions`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        prompt: pfml3(u.from, src),
+        prompt: pfml3(masked, src),
         temperature: 0,
         max_tokens: 1024,
         stop: ['<|plamo:tag|>', '<|plamo:bos|>'],
       }),
     })
     if (!r.ok) return null
-    const out = String(JSON.parse(r.text)?.choices?.[0]?.text ?? '').trim()
+    const out = restore(String(JSON.parse(r.text)?.choices?.[0]?.text ?? '').trim())
+    if (out === null) return null
     // 空・元のまま・長さが極端に違う出力は使わない
     const ratio = out.length / Math.max(1, u.from.length)
     const [lo, hi] = src === 'en' ? [0.1, 2] : [0.4, 2.5]
@@ -135,6 +157,11 @@ export const register: Register = (on, options) => {
   const endpoint = typeof options.endpoint === 'string' ? options.endpoint.trim().replace(/\/+$/, '') : ''
   cfg.endpoint = endpoint || DEFAULT_ENDPOINT
   cfg.start = typeof options.startCommand === 'string' ? splitCommand(options.startCommand) : []
+  cfg.keepTerms = (typeof options.keepTerms === 'string' ? options.keepTerms : '')
+    .split(',')
+    .map((t) => t.trim())
+    .filter(Boolean)
+    .sort((a, b) => b.length - a.length)
   cfg.style = readStyle(options)
 
   on('session.start', async ($, e, next) => {
